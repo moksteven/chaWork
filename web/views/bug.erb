@@ -1,0 +1,132 @@
+<div id="page-wrapper">
+        <%= partial 'bug' %>
+        <div class="row">
+          <form method='get' action='' >
+          <div class="col-lg-11" style='margin:15px 20px;'>
+            <label style='width:50px;float:left;line-height:30px;'>筛选：</label>
+            <select class='form-control' name='status' style='width:120px;float:left;margin-right:15px;'>
+                <option value=''></option>
+
+              <%Bug.status_hash.each do |key,val| %>
+                <option value='<%=key%>' <%='selected' if key.to_s==params[:status] %> >
+                  <%=val%>
+                </option>
+              <%end%>
+            </select>
+            <select class='form-control' name='level' style='width:120px;float:left;margin-right:15px;'>
+              <option value=''></option>
+
+              <%Bug.level_hash.each do |key,val| %>
+                <option value='<%=key%>' <%='selected' if key.to_s==params[:level] %> >
+                  <%=val%>
+                </option>
+              <%end%>
+            </select>
+            <button type="submit" class="btn btn-outline btn-success">查询</button>
+          </div>
+          <form>
+        </div>
+        <div class="row">
+          <div class="col-lg-11" style='margin:5px 20px;'>
+            共查到 <span class="label label-info"> <%=@bugs_count%></span> 条记录
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-11" style='margin:5px 20px;'>
+            <!-- On rows -->
+              <table class="table table-condensed" >
+
+                <tr class="active">
+                  <td  style='width:50px;text-align:center'>级别</td>  
+                  <td >标题</td>
+                  <td >状态</td>
+                  <td >所属项目</td>
+                  <!-- <td >指派给</td> -->
+                  <td >创建时间</td>
+                  <td ></td>
+                </tr>
+                <%@bugs.each do |bug|%>
+                <tr >
+                  <td ><span class="label label-<%=bug.stylesheets%>"><%=bug.level_word%></span></td>
+                  <td ><%=bug.title%></td>
+                  <td >
+                    <select class='form-control status_select' bug_id='<%=bug.id%>' style='width:120px;'>
+                      <%Bug.status_hash.each do |key,val| %>
+                        <option value='<%=key%>' <%='selected' if bug.status==key %> ><%=val%></option>
+                      <%end%>
+                        
+                    </select>
+
+                  </td>
+                  <td ><%=bug.project.name if bug.project %></td>
+                  <!-- <td ><span class="label label-warning"><%=bug.user.name%></span> 指派给 <span class="label label-success"><%=bug.solve_user.name if bug.solve_user%></span> </td> -->
+                  <td ><%=bug.created_at.strftime('%Y/%m/%d') %></td>
+                  <td >
+                    <%if bug.user_id == @user.id %>
+                        <div class="btn-group">
+                          <a href='/modify_bug?bug_id=<%=bug.id%>' class="btn btn-outline btn-success" style=''>修改</a>
+                          <button type="button" class="btn btn-outline btn-danger dropdown-toggle" data-toggle="dropdown">
+                            删除 <span class="caret"></span>
+                          </button>
+                          <ul class="dropdown-menu" role="menu">
+                            <li><a href="/destroy_bug?bug_id=<%=bug.id%>&status=<%=params[:status]%>&level=<%=params[:level]%>&module=<%=params[:type]%>&page=<%=params[:page]%>">确定</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#">取消</a></li>
+                          </ul>
+                        </div>
+                    <%end%>
+                  </td>
+                </tr>
+                <%end%>
+              </table>
+            <%= will_paginate @bugs,  renderer: WillPaginate::ViewHelpers::BoostrapLinkRenderer  %>
+          </div>
+        </div>
+<style>
+    tr td{
+        text-align: left;
+    }
+</style>
+</div><!-- /#page-wrapper -->
+
+<%= partial 'bug_modal' %>
+
+<script>
+$(function(){
+  var status;
+  var bug_id;
+  var description;
+  $('.status_select').on('change',function(){
+    status = $(this).val();
+    bug_id =$(this).attr('bug_id');
+    $.post('/bug_status',{'status':status, 'bug_id':bug_id },function(data){
+      obj = eval('('+data+')');
+      if(obj.status=='success'){
+        if(status == '2') $('#bug_modal').modal({});
+      }else{
+        alert(obj.msg);
+      }
+
+    })
+  })
+
+  $('#modal_save').on('click',function(){
+     description = $('#description').val()
+    if(description!='' && bug_id!=''){
+      $.post('/bug_description',{'description':description, 'bug_id':bug_id },function(data){
+        obj = eval('('+data+')');
+        if(obj.status=='success'){
+          if(status == '2') $('#bug_modal').modal({});
+          $('#bug_modal').modal('hide');
+        }else{
+          alert(obj.msg);
+        }
+
+      })
+    }else{
+      alert('请输入内容');
+    }
+  })
+  
+})
+</script>

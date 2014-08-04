@@ -1,0 +1,61 @@
+<div id="page-wrapper">
+	<%=partial 'report'%>
+	<div class="row">
+    <form method='get' action='' >
+    <div class="col-lg-11" style='margin:15px 20px;'>
+      <!-- <label style='width:50px;float:left;line-height:30px;'>筛选：</label> -->
+      
+      <!-- <button type="submit" class="btn btn-outline btn-success">查询</button> -->
+    </div>
+    <form>
+  </div>
+  <div class="row">
+    <div class="col-lg-11" style='margin:5px 20px;'>
+      共查到 <span class="label label-info"> <%=@reports_count%></span> 条记录
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-12" style='margin:5px 50px 20px 20px;'>
+      <!-- On rows -->
+        <table class="table table-condensed" >
+          <tr class="active" style='font-size:15px;'>
+            <td style='width:150px;'>用户</td>
+            <td >今日完成</td>
+            <td >明天计划</td>
+            <td >收获或问题</td>
+            <td style='width:100px;'>总结日期</td>
+            <td style='width:140px;'></td>
+          </tr>
+
+          <%@reports.each do |report| %>
+            <tr>
+              <td style='line-height:40px;'>&nbsp;&nbsp;&nbsp;<%=report.user.name if report.user%> <%=image_tag report.user.photo.thumb.url, :class=>'img-responsive img-circle', :style => 'width:40px;float:left;' if report.user %> </td>
+              <td ><%=Report.wrap(report.today).html_safe%></td>
+              <td ><%=Report.wrap(report.tomorrow).html_safe%></td>
+              <td ><%=Report.wrap(report.summary).html_safe%></td>
+              <td ><%=report.wdate ? report.wdate.strftime('%Y/%m/%d') : report.created_at.strftime('%Y/%m/%d') %></td>
+              <td >
+                <%if report.user_id == @user.id %>
+                    <div class="btn-group">
+                      <a href='/modify_report?report_id=<%=report.id%>' class="btn btn-outline btn-success" style=''>修改</a>
+                      <button type="button" class="btn btn-outline btn-danger dropdown-toggle" data-toggle="dropdown">
+                        删除 <span class="caret"></span>
+                      </button>
+                      <ul class="dropdown-menu" role="menu">
+                        <li><a href="/destroy_report?report_id=<%=report.id%>">确定</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#">取消</a></li>
+                      </ul>
+                    </div>
+                <%end%>
+
+              </td>
+            </tr>
+          <%end%>
+          
+       </table>
+      <%= will_paginate @reports,  renderer: WillPaginate::ViewHelpers::BoostrapLinkRenderer  %>
+    </div>
+  </div>
+
+</div>

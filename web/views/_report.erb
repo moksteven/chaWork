@@ -1,0 +1,16 @@
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">每日小结</h1>
+    </div>
+    <!-- /.col-lg-12 -->
+</div>
+<!-- /.row -->
+<div class='col-lg-12'>
+  <%= {:error => 'danger', :warning => 'warning', :success => 'success', :notice => 'info'}.map { |type, class_name| flash_tag(type, :class => "alert alert-#{class_name} fade in", :bootstrap => true) }.join.html_safe %>
+    <ul class="nav nav-tabs" role="tablist">
+      <li <%='class=active' if params[:type]=='byme' %> ><a href="/report/byme">我的工作小结</a></li>
+      <li <%='class=active' if params[:type]=='all' %>><a href="/report/all">所有人的</a></li>
+      <li <%='class=active' if @type == 'new' %> ><a href="/new_report"><%= @name=='modify' ? '修改' : '新建' %>小结</a></li>
+    </ul>
+</div>
+<!-- /.row -->

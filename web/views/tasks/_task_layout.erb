@@ -1,0 +1,96 @@
+﻿<%=javascript_include_tag 'underscore.1.6' %>
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">任务池</h1>
+    </div>
+    <!-- /.col-lg-12 -->
+</div>
+<!-- /.row -->
+<div class='col-lg-12'>
+  <%if  @add_field%>
+  <div class="form-group col-xs-6" style = 'padding-left:0px;'>
+    <%=text_field_tag 'content', :class=>'form-control', :id => 'content', :placeholder => '任务' %>
+  </div>
+  <div class="form-group col-xs-2">
+    <%=select_tag 'user_id',:id => 'user', :collection => @users, :class => 'form-control', :fields => [:name, :id]%>
+  </div>
+  <div style='clear:both'></div>
+  <%end%>
+  <%= {:error => 'danger', :warning => 'warning', :success => 'success', :notice => 'info'}.map { |type, class_name| flash_tag(type, :class => "alert alert-#{class_name} fade in", :bootstrap => true) }.join.html_safe %>
+    <ul class="nav nav-tabs" role="tablist">
+      <li <%='class=active' if params[:type]=='tome' %>><a href="/task/tome">指派给我的</a></li>
+      <li <%='class=active' if params[:type]=='byme' %> ><a href="/task/byme">我添加的</a></li>
+      <li <%='class=active' if params[:type]=='all' %>><a href="/task/all">所有任务</a></li>
+      <li <%='class=active' if @type == 'new' %>><a href="/task/add"><%= @name=='modify' ? '修改' : '新建' %> 任务</a></li>
+      <li <%='class=active' if @type=='week' %>><a href="/task/week">按周预览</a></li>
+    </ul>
+</div>
+
+<script type='text/template' id='task_cell'>
+<tr >
+  <td ><span class="label label-{{stylesheets}}">{{level_word}}</span></td>
+  <td >{{title}}</td>
+  <td >
+    <select name='assign' tag='{{id}}' class = 'form-control cell_assign' >
+    {% for(var i in user_ids){%}
+      {{user_ids[i]}}
+      
+      <option value='{{user_ids[i]}}'
+      {% if(user_ids[i] == assign_id){ %}
+        selected
+      {% } %}
+       >{{user_names[i]}}
+       </option>
+    {%}%}
+    </select>
+  </td>
+  <td></td>
+  <td >
+   {{created_at}}
+  </td>
+    <td>
+      {%if(user_id){ %}
+      <div class="btn-group">
+            <a href='/modify_task?task_id={{id}}' class="btn btn-outline btn-success" >修改</a>
+            <button type="button" class="btn btn-outline btn-danger dropdown-toggle" data-toggle="dropdown">
+              删除 <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+              <li><a href="/destroy_task?task_id={{id}}&page={{page}}">确定</a></li>
+              <li class="divider"></li>
+              <li><a href="#">取消</a></li>
+            </ul>
+          </div>
+        {%}%}
+    </td>
+</tr>
+
+</script>
+
+<script>
+
+$(function(){
+  _.templateSettings = {
+  interpolate: /\{\{(.+?)\}\}/g,
+  evaluate: /\{\%(.+?)\%\}/g
+    };
+  $(document).keydown(function(event){ 
+      if (event.keyCode == 13){
+        var title = $('#content').val();
+        var assign  = $('#user').val()
+        if($('#content').val()!='' && $('#user').val()!=''){
+          // console.warn(event.keyCode);
+          $.post('/create_task', {'task[title]': title, 'task[assign]': assign,'page':'<%=params['page']%>', 'json': 'json'})
+           .done(function(data){
+              console.warn(data);
+              var obj = eval('('+data+')')
+              alert(obj.user_ids);
+              var template = _.template($('#task_cell').html());
+              $('#task_table tbody').prepend(template(obj));
+              $('#content').val('');
+          })
+        }
+      }  
+    });
+})
+</script>

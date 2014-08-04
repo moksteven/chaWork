@@ -1,0 +1,69 @@
+<%=stylesheet_link_tag 'bootstrap-datetimepicker'%> 
+<%=javascript_include_tag 'bootstrap-datetimepicker', 'bootstrap-datetimepicker.zh-CN'%>
+<div id="page-wrapper">
+		<%= partial 'report' %>
+		<div class="row">
+      <div class="col-lg-12" style='margin-top:20px;'>
+      	<form action="/modify_report" class="form-horizontal" method='post'  role="form">
+            <fieldset>
+                <div class="form-group">
+                    <label for="today" class="col-md-2 control-label">今日完成</label>
+                    <div class="input-group col-md-5">
+                        <input style='display:none;' type='text' name='report[id]' value='<%=@report.id%>' />
+                        <textarea id='today' name='report[today]' class="form-control" value='' style='resize: none;height:150px;'><%=@report.today%></textarea>
+                        <span class="input-group-addon clear_val"><span class="glyphicon glyphicon-remove"></span></span>
+                    </div>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <div class="form-group">
+                    <label for="tomorrow" class="col-md-2 control-label">明天计划</label>
+                    <div class="input-group col-md-5">
+                        <textarea id='tomorrow' name='report[tomorrow]' class="form-control" value='' style='resize: none;height:150px;'><%=@report.tomorrow%></textarea>
+                        <span class="input-group-addon clear_val"><span class="glyphicon glyphicon-remove"></span></span>
+                    </div>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <div class="form-group">
+                    <label for="summary" class="col-md-2 control-label">收获或问题</label>
+                    <div class="input-group col-md-5">
+                        <textarea id='summary' name='report[summary]' class="form-control" value='' style='resize: none;height:150px;'><%=@report.summary%></textarea>
+                        <span class="input-group-addon clear_val"><span class="glyphicon glyphicon-remove"></span></span>
+                    </div>
+                </div>
+            </fieldset>
+
+            
+            
+            <fieldset>
+                <div class="form-group">
+                    <button type="submit" class="btn col-md-offset-2 btn-outline btn-success">提交</button>
+                </div>
+            </fieldset>
+
+
+        </form>
+
+      </div>
+    </div>
+
+</div><!-- /#page-wrapper -->
+<script type="text/javascript">
+ $('.form_date').datetimepicker({
+        format: 'yyyy-mm-dd',
+        language:  'zh-CN',
+        weekStart: 1,
+        todayBtn:  1,
+        autoclose: 1,
+        todayHighlight: 1,
+        startView: 2,
+        minView: 2,
+        forceParse: 0
+    }); 
+    $('.clear_val').click(function(){
+        $(this).siblings().val('')
+    })
+</script>

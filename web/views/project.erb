@@ -1,0 +1,157 @@
+<%=stylesheet_link_tag 'bootstrap-datetimepicker'%> 
+<%=javascript_include_tag 'bootstrap-datetimepicker', 'bootstrap-datetimepicker.zh-CN'%>
+<div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">我参与的项目</h1>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                
+                <!-- /.col-lg-4 -->
+                <%@projects.each do |project| %>
+                    <%code = %w(panel-primary panel-success panel-info panel-warning)
+
+                      i = rand(0..3)
+                    %>
+                    <div class="col-lg-4">
+                        <div class="panel <%=code[i]%>">
+                            <div class="panel-heading">
+                                <%=project.name%>
+
+                            </div>
+                            <div class="panel-body">
+                                <p><%=project.description%></p>
+                                <hr>
+                                <h5>成员</h5>
+                                
+                                <%project.users.each do |user| %>
+                                <p style='line-height:50px;height:50px;'>
+                                    <% photo = user.photo ? user.photo.thumb.url : '/images/default_avatar.jpg' %>
+                                    <%=image_tag photo ,
+                                                 :class=>'img-responsive img-circle',
+                                                 :style=>'float:left;height:50px;margin-right:20px;' %> 
+                                    <%=user.name%> <%=user.title%>
+                                </p>
+                                <%end%>
+                                <hr>
+                                <h5>结束日期</h5>
+                                <p>
+                                    <%=project.end_time.strftime('%Y/%m/%d') if project.end_time %>
+                                </p>
+                                
+                            </div>
+                            
+                            <div class="panel-footer">
+                                <%=project.user.name %> 创建于 <%=project.created_at.strftime('%m月%d日')%>
+                                <%if project.user.id == @user.id %>
+                                    <div class="btn-group">
+                                      <button type="button" class="btn btn-outline btn-danger dropdown-toggle" data-toggle="dropdown">
+                                        删除 <span class="caret"></span>
+                                      </button>
+                                      <ul class="dropdown-menu" role="menu">
+                                        <li><a href="/project/destroy?project_id=<%=project.id%>">确定</a></li>
+                                        <li class="divider"></li>
+                                        <li><a href="#">取消</a></li>
+                                      </ul>
+                                    </div>
+
+                                    <a href='/project/modify?project_id=<%=project.id%>' class="btn btn-outline btn-success" style=''>修改</a>
+                                <%end%>
+                            </div>
+                        </div>
+                    </div>
+                <%end%>
+
+                
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-warning">
+                        <div class="panel-heading">
+                            添加项目
+                        </div>
+                        <!-- .panel-heading -->
+                        <div class="panel-body">
+                             <form action="/project/create" class="form-horizontal" method='post'  role="form">
+                                <fieldset>
+                                    <div class="form-group">
+                                        <label for="name" class="col-md-2 control-label">项目名称</label>
+                                        <div class="input-group col-md-5">
+                                            <input id='name' class="form-control" name='name' value=''>
+                                            <span class="input-group-addon clear_val"><span class="glyphicon glyphicon-remove"></span></span>
+                                        </div>
+                                    </div>
+                                </fieldset>
+
+                                <fieldset>
+                                    <div class="form-group">
+                                        <label for="end_time" class="col-md-2 control-label">结束时间</label>
+                                        <div class="input-group date form_date col-md-5" data-date="" data-date-format="dd MM yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
+                                            <input id='end_time' class="form-control" size="16" type="text" value="" name='end_time' readonly>
+                                            <span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+                                            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                                        </div>
+                                    </div>
+                                </fieldset>
+
+                                <fieldset>
+                                    <div class="form-group">
+                                        <label for="description" class="col-md-2 control-label">项目描述</label>
+                                        <div class="input-group col-md-5">
+                                            <textarea id='description' name='description' class="form-control" value='' style='resize: none;height:150px;'></textarea>
+                                            <span class="input-group-addon clear_val"><span class="glyphicon glyphicon-remove"></span></span>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                                <fieldset>
+                                    <div class="form-group">
+                                        <label class="col-md-2 control-label">添加成员</label>
+                                            <%@users.each do |user| %>
+                                            <label class="checkbox-inline">
+                                                <input type="checkbox" name='member[]' value='<%=user.id%>'
+                                                <%='checked disabled' if user.id == @user.id  %>
+                                                ><%=user.name%> 
+                                            </label>
+                                            
+                                            <%end%>
+                                        </div>
+                                </fieldset>
+                                <fieldset>
+                                    <div class="form-group">
+                                        <button type="submit" class="btn col-md-offset-6 btn-outline btn-success">提交项目</button>
+                                    </div>
+                                </fieldset>
+                                
+                            </form>
+                            
+                        </div>
+                        <!-- .panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+        </div>
+        <!-- /#page-wrapper -->
+<script type="text/javascript">
+  
+    $('.form_date').datetimepicker({
+        format: 'yyyy-mm-dd',
+        language:  'zh-CN',
+        weekStart: 1,
+        todayBtn:  1,
+        autoclose: 1,
+        todayHighlight: 1,
+        startView: 2,
+        minView: 2,
+        forceParse: 0
+    }); 
+    $('.clear_val').click(function(){
+        $(this).siblings().val('')
+    })
+</script>
+

@@ -1,0 +1,97 @@
+<div id="page-wrapper">
+		<%= partial 'bug' %>
+		<div class="row">
+      <div class="col-lg-12" style='margin-top:20px;'>
+      	<form action="/new_bug" class="form-horizontal" method='post'  role="form" >
+            <fieldset>
+                <div class="form-group">
+                    <label for="title" class="col-md-2 control-label">bug标题</label>
+                    <div class="input-group col-md-5">
+                        <input id='title' required="required" class="form-control" name='bug[title]' value=''>
+                        <span class="input-group-addon clear_val"><span class="glyphicon glyphicon-remove"></span></span>
+                    </div>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <div class="form-group">
+                    <label for="description" class="col-md-2 control-label">描述</label>
+                    <div class="input-group col-md-5">
+                        <textarea id='description' name='bug[description]' class="form-control" value='' style='resize: none;height:150px;'></textarea>
+                        <span class="input-group-addon clear_val"><span class="glyphicon glyphicon-remove"></span></span>
+                    </div>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <div class="form-group">
+                    <label for="level" class="col-md-2 control-label">级别</label>
+                    <div class="input-group col-md-5">
+                        <select id='level' name='bug[level]' class="form-control">
+                          <option value='2'>一般</option>
+                          <option value='1'>重要</option>
+                          <option value='0'>紧急</option>
+                          
+                        </select>
+                    </div>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <div class="form-group">
+                    <label for="status" class="col-md-2 control-label">状态</label>
+                    <div class="input-group col-md-5">
+                        <select id='status' name='bug[status]' class="form-control">
+						  <option value='0'>待跟进</option>
+						  <option value='1'>跟进中</option>
+						  <option value='2'>已处理</option>
+						  <option value='3'>关闭</option>
+						</select>
+                    </div>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <div class="form-group">
+                    <label for="solve_user_id" class="col-md-2 control-label">指派给</label>
+                    <div class="input-group col-md-5">
+                        <select id='solve_user_id' name='bug[solve_user_id]' class="form-control">
+                        	<%@users.each do |user|%>
+						  <option value='<%=user.id%>'
+						  	<%='selected' if user.id==@user.id %>><%=user.name%></option>
+						  <%end%>
+						</select>
+                    </div>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <div class="form-group">
+                    <label for="project_id" class="col-md-2 control-label">所属项目</label>
+                    <div class="input-group col-md-5">
+                        <select id='project_id' name='bug[project_id]' class="form-control">
+                          <option value='0'>无</option>
+                          <%@projects.each do |project| %>
+                            <option value='<%=project.id%>'><%=project.name%></option>
+                          <%end%>
+                        </select>
+                    </div>
+                </div>
+            </fieldset>
+            
+            <fieldset>
+                <div class="form-group">
+                    <button type="submit" class="btn col-md-offset-2 btn-outline btn-success">提交</button>
+                </div>
+            </fieldset>
+        </form>
+
+      </div>
+    </div>
+
+</div><!-- /#page-wrapper -->
+<script type="text/javascript">
+    $('.clear_val').click(function(){
+        $(this).siblings().val('')
+    })
+</script>

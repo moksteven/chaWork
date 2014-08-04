@@ -1,0 +1,52 @@
+<% error = @user.errors.key?(:email) && @user.errors[:email].count > 0 %>
+<fieldset class='control-group <%= error ? 'has-error' : ''%>'>
+  <%= f.label :email, :class => 'control-label' %>
+  <div class='controls'>
+    <%= f.text_field :email, :class => 'form-control input-xlarge input-with-feedback', :autofocus => true %>
+  </div>
+</fieldset>
+<% error = @user.errors.key?(:name) && @user.errors[:name].count > 0 %>
+<fieldset class='control-group <%= error ? 'has-error' : ''%>'>
+  <%= f.label :name, :class => 'control-label' %>
+  <div class='controls'>
+    <%= f.text_field :name, :class => 'form-control input-xlarge input-with-feedback' %>
+  </div>
+</fieldset>
+<% error = @user.errors.key?(:password) && @user.errors[:password].count > 0 %>
+<fieldset class='control-group <%= error ? 'has-error' : ''%>'>
+  <%= f.label :password, :class => 'control-label' %>
+  <div class='controls'>
+    <%= f.text_field :password, :class => 'form-control input-xlarge input-with-feedback' %>
+  </div>
+</fieldset>
+<!--<% error = @user.errors.key?(:login_count) && @user.errors[:login_count].count > 0 %>
+<fieldset class='control-group <%= error ? 'has-error' : ''%>'>
+  <%= f.label :login_count, :class => 'control-label' %>
+  <div class='controls'>
+    <%= f.text_field :login_count, :class => 'form-control input-xlarge input-with-feedback' %>
+  </div>
+</fieldset>
+<% error = @user.errors.key?(:last_login) && @user.errors[:last_login].count > 0 %>
+ <fieldset class='control-group <%= error ? 'has-error' : ''%>'>
+  <%= f.label :last_login, :class => 'control-label' %>
+  <div class='controls'>
+    <%= f.text_field :last_login, :class => 'form-control input-xlarge input-with-feedback' %>
+  </div>
+</fieldset> -->
+<% error = @user.errors.key?(:photo) && @user.errors[:photo].count > 0 %>
+<fieldset class='control-group <%= error ? 'has-error' : ''%>'>
+  <%= f.label :photo, :class => 'control-label' %>
+  <div class='controls'>
+    <%= f.file_field :photo, :class => 'form-control input-xlarge input-with-feedback' %>
+    
+  </div>
+</fieldset>
+
+<br />
+<div class="form-actions">
+  <%= f.submit pat(:save), :class => 'btn btn-primary' %>
+  &nbsp;
+  <%= f.submit pat(:save_and_continue), :class => 'btn btn-info', :name => 'save_and_continue' %>
+  &nbsp;
+  <%= link_to pat(:cancel), url(:users, :index), :class => 'btn btn-default' %>
+</div>

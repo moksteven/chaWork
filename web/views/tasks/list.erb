@@ -1,0 +1,93 @@
+
+<div id="page-wrapper">
+<%=partial('tasks/task_layout') %>
+        <div class="row">
+          <!-- <form method='get' action='' >
+          <div class="col-lg-11" style='margin:15px 20px;'>
+            <label style='width:50px;float:left;line-height:30px;'>筛选：</label>
+   
+        
+            <button type="submit" class="btn btn-outline btn-success">查询</button>
+          </div>
+          <form> -->
+
+        </div>
+        <div class="row">
+          <div class="col-lg-11" style='margin:5px 20px;'>
+            共查到 <span class="label label-info"> <%=@count%></span> 条记录
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-11" style='margin:5px 20px;'>
+            <!-- On rows -->
+              <table class="table table-condensed" id='task_table' >
+                <thead>
+                <tr class="active">
+                  <td  style='width:50px;text-align:center'>级别</td>  
+                  <td >任务描述</td>
+                  <td >指派</td><!-- 
+                  <td >状态</td>-->
+                  <td >所属项目</td> 
+                  <td >创建时间</td>
+                  <td ></td>
+                </tr>
+                </thead>
+                <tbody>
+                <%@tasks.each do |task|%>
+                <tr >
+                  <td ><span class="label label-<%=task.stylesheets%>"><%=task.level_word%></span></td>
+                  <td ><%=task.title%></td>
+                  <td >
+                    <%=select_tag 'assign', :tag =>task.id , :collection => @users, :class => 'form-control cell_assign', :fields => [:name, :id], :selected =>task.solve_user.name %>
+                  </td>
+                  <!-- <td ><%=task.status%></td> -->
+                  <td >
+                    <%=task.project_name%>
+                    
+                  </td>
+                  <!-- <td ><%#=task.deadline.strftime('%Y/%m/%d') %></td> -->
+                  <td >
+                   <%=task.created_at.strftime('%Y/%m/%d')%>
+                  </td>
+                  <td>
+                    <%if task.user_id == @user.id %>
+                    <div class="btn-group">
+                          <a href='/modify_task?task_id=<%=task.id%>' class="btn btn-outline btn-success" style=''>修改</a>
+                          <button type="button" class="btn btn-outline btn-danger dropdown-toggle" data-toggle="dropdown">
+                            删除 <span class="caret"></span>
+                          </button>
+                          <ul class="dropdown-menu" role="menu">
+                            <li><a href="/destroy_task?task_id=<%=task.id%>&page=<%=params[:page]%>">确定</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#">取消</a></li>
+                          </ul>
+                        </div>
+                      <%end%>
+                  </td>
+                </tr>
+                <%end%>
+                </tbody>
+              </table>
+            <%= will_paginate @tasks,  renderer: WillPaginate::ViewHelpers::BoostrapLinkRenderer  %>
+          </div>
+        </div>
+<style>
+    tr td{
+        text-align: left;
+    }
+</style>
+</div><!-- /#page-wrapper -->
+<script>
+$(function(){
+  $('body').on('change','.cell_assign',function(){
+    var task_id = $(this).attr('tag');
+    var assign  = $(this).val();
+    $.post('/modify_task', {'id': task_id, 'task[assign]': assign })
+     .done(function(e){
+     })
+     .fail(function() {
+      alert("网络异常");
+     })
+  })
+})
+</script>

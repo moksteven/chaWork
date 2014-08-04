@@ -1,0 +1,101 @@
+<div id="page-wrapper" >
+<%=partial('tasks/task_layout') %>
+	<div class='row' >
+		
+    <div class='col-md-10' style='margin-top:20px;'>
+      <div class='col-md-2 date_cube'>
+        <h5>周一</h5>
+        <%@tasks1.each do |task| %>
+          <div class='items'>
+            <%=task.title%>
+          </div>
+        <%end%>
+      </div>
+      <div class='col-md-2 date_cube'>
+        <h5>周二</h5>
+        <%@tasks2.each do |task| %>
+          <div class='items'>
+            <%=task.title%>
+          </div>
+        <%end%>
+      </div>
+      <div class='col-md-2 date_cube'>
+        <h5>周三</h5>
+        <%@tasks3.each do |task| %>
+          <div class='items'>
+            <%=task.title%>
+          </div>
+        <%end%>
+      </div> 
+        <div class='col-md-2 date_cube'>
+      <h5>周四</h5>
+      <%@tasks4.each do |task| %>
+          <div class='items'>
+            <%=task.title%>
+          </div>
+        <%end%>
+      </div>
+      <div class='col-md-2 date_cube'>
+        <h5>周五</h5>
+        <%@tasks5.each do |task| %>
+          <div class='items'>
+            <%=task.title%>
+          </div>
+        <%end%>
+      </div>
+      <!-- <div class='col-md-2 date_cube date_cube_last'>
+        <h5>周六</h5>
+      </div> -->
+    </div>
+    
+  </div>
+
+</div>
+<style>
+*{
+	padding:0;
+	margin:0;
+	color:#666666;
+}
+.border{
+	border:1px #2a6496 solid;
+	min-height: 20px;
+}
+
+.container{
+	height: 300px;
+	min-height:300px;
+}
+.row,.col-md-10,.col-md-2{
+	height:100%;
+}
+
+.date_cube{
+	/*border-left: 1px #2a6496 solid; 
+	border-top: 1px #2a6496 solid;
+  border-bottom: 1px #2a6496 solid;*/
+	border: 1px #2a6496 solid;
+	padding-left:9px !important;
+	padding-right:9px !important;
+
+}
+.date_cube_last{
+	border-right:1px #2a6496 solid;
+}
+.date_cube:hover{
+	background-color: #f6f7f1;
+	cursor: pointer;
+}
+.items{
+	width:100%;
+	margin: 6px auto;
+	background-color: #d2322d;
+	padding:3px 5px;
+	font-size: 12px;
+	color:#ffffff;
+	-moz-border-radius:10px;
+	-webkit-border-radius:10px;
+	border-radius:10px;
+}
+
+</style>
